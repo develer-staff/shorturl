@@ -37,5 +37,5 @@ def root(request):
         else:
             return HttpResponseBadRequest(content='invalid request')
     else:
-        return render_to_response( 'root.html', {}, context_instance = RequestContext(request))
+        return render_to_response('root.html', {}, context_instance = RequestContext(request))
 

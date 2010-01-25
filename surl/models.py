@@ -1,7 +1,10 @@
 # -*- coding: UTF-8 -*-
 from django.db import models
 
+from datetime import datetime
 from random import choice
+
+character_set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
 
 class ShortUrl(models.Model):
     id = models.CharField(max_length=6, primary_key=True)
@@ -10,20 +13,24 @@ class ShortUrl(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     @classmethod
-    def new_url(cls, url, title=''):
-        character_set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
+    def new_url(cls, url, title='', id=None):
         def r():
             return ''.join(choice(character_set) for x in range(6))
 
         i = ShortUrl()
         i.url = url
         i.title = title
-        while True:
-            i.id = r()
-            try:
-                i.save()
-            except Exception, e:
-                print e
-            else:
-                break
+        i.created = datetime.now()
+        if id is None:
+            while True:
+                i.id = r()
+                try:
+                    i.save(force_insert=True)
+                except Exception, e:
+                    print e
+                else:
+                    break
+        else:
+            i.id = id
+            i.save(force_insert=True)
         return i

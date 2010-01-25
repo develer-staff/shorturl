@@ -1,0 +1,5 @@
+*.pyc
+Thumbs.db
+settings_locale.py
+db/*
+.DS_Store

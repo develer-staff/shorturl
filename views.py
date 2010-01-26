@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from surl import models
+from surl.views import make_short_url
 
 from django.db import IntegrityError
 
@@ -18,22 +19,11 @@ def root(request):
         f = UrlForm(request.POST)
         if f.is_valid():
             data = f.cleaned_data
-            short = None
-            if data['reuse']:
-                try:
-                    short = models.ShortUrl.objects.filter(url=data['url'])[0]
-                except IndexError:
-                    pass
-            if short is None:
-                title = ''
-                if data['name']:
-                    try:
-                        short = models.ShortUrl.new_url(data['url'], title, id=data['name'])
-                    except IntegrityError, e:
-                        return HttpResponseBadRequest(content='name already used')
-                else:
-                    short = models.ShortUrl.new_url(data['url'], title)
-            return HttpResponse(content = short.id)
+            try:
+                url = make_short_url(data['url'], code=data['name'], reuse=data['reuse'])
+            except IntegrityError, e:
+                return HttpResponseBadRequest(content='name already used')
+            return HttpResponse(content = url)
         else:
             return HttpResponseBadRequest(content='invalid request')
     else:

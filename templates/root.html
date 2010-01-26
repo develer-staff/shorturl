@@ -107,9 +107,11 @@
             <input type="submit" value="make short url" />
         </div>
     </form>
+    {% if jsonp %}
     <div>
         The bookmarklet: 
-        <a href="javascript:(function()%20{document.log=function(data){%20prompt(%27The%20short%20version%27,%20data);%20};var%20e=document.createElement(%22script%22);e.src=%22http://localhost:8000/s/short_url?q=%22%20+%20encodeURIComponent(document.location.href);e.type=%22text/javascript%22;document.getElementsByTagName(%22head%22)[0].appendChild(e);})();" title="dvlr.it!">dvlr.it!</a>
+        <a href="javascript:(function()%20{document.log=function(data){%20prompt(%27The%20short%20version%27,%20data);%20};var%20e=document.createElement(%22script%22);e.src=%22{{ jsonp }}?q=%22%20+%20encodeURIComponent(document.location.href);e.type=%22text/javascript%22;document.getElementsByTagName(%22head%22)[0].appendChild(e);})();" title="dvlr.it!">dvlr.it!</a>
     </div>
+    {% endif %}
 </body>
 </html>

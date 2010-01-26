@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from surl import models
+from surl.settings import ABSOLUTE_PREFIX_JSONP_SERVICE
 from surl.views import make_short_url
 
 from django.db import IntegrityError
@@ -27,5 +28,8 @@ def root(request):
         else:
             return HttpResponseBadRequest(content='invalid request')
     else:
-        return render_to_response('root.html', {}, context_instance = RequestContext(request))
+        ctx = {
+            'jsonp': ABSOLUTE_PREFIX_JSONP_SERVICE,
+        }
+        return render_to_response('root.html', ctx, context_instance=RequestContext(request))
 

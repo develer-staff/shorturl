@@ -2,6 +2,7 @@
 import models
 import settings
 
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
@@ -35,5 +36,9 @@ def make_short_url(url, code=None, reuse=True):
             short = models.ShortUrl.new_url(url, title, id=code)
         else:
             short = models.ShortUrl.new_url(url, title)
-    return settings.URL_PREFIX + short.id
+    if settings.ABSOLUTE_PREFIX_REDIRECT_SERVICE:
+        url = settings.ABSOLUTE_PREFIX_REDIRECT_SERVICE + short.id
+    else:
+        url = reverse('surl-redirect', kwargs={'url': short.id})
+    return url
 

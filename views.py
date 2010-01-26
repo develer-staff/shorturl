@@ -12,7 +12,7 @@ from django.db import IntegrityError
 
 class UrlForm(forms.Form):
     url = forms.URLField(verify_exists=False)
-    name = forms.CharField(max_length=6, required=False)
+    name = forms.CharField(max_length=4, required=False)
     reuse = forms.BooleanField(required=False)
 
 def root(request):

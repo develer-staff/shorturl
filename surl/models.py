@@ -7,7 +7,7 @@ from random import choice
 character_set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
 
 class ShortUrl(models.Model):
-    id = models.CharField(max_length=6, primary_key=True)
+    id = models.CharField(max_length=4, primary_key=True)
     url = models.URLField(verify_exists=False, db_index=True)
     title = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
@@ -15,7 +15,7 @@ class ShortUrl(models.Model):
     @classmethod
     def new_url(cls, url, title='', id=None):
         def r():
-            return ''.join(choice(character_set) for x in range(6))
+            return ''.join(choice(character_set) for x in range(4))
 
         i = ShortUrl()
         i.url = url

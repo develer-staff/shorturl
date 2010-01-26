@@ -7,3 +7,7 @@ try:
 except AttributeError:
     raise ImproperlyConfigured('google analytics code not found')
 
+try:
+    URL_PREFIX = settings.SURL_URL_PREFIX
+except AttributeError:
+    raise ImproperlyConfigured('url prefix not found')

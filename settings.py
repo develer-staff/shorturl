@@ -76,7 +76,12 @@ INSTALLED_APPS = (
     'surl',
 )
 
+import os
+additional_settings = os.environ.get('LOCAL_SETTINGS', 'settings_locale')
 try:
-    from settings_locale import *
+    exec('from %s import *' % additional_settings)
 except ImportError:
     pass
+
+del additional_settings
+del os

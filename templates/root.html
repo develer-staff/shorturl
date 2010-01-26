@@ -3,23 +3,110 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>dvlr.it - url shortening service</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <style type="text/css">
+    body {
+        background: white;
+        color: gray;
+        font-family: tahoma, helvetica, sans-serif;
+        font-style: normal;
+        font-size: 18px;
+    }
+    input {
+        height: 25px;
+        border: 1px solid gray;
+        font-family: tahoma, helvetica, sans-serif;
+        font-style: normal;
+        font-size: 18px;
+    }
+    form {
+        width: 1024px;
+        margin: 0 auto;
+    }
+    form > div {
+        margin-bottom: 10px;
+    }
+    label {
+        display: inline-block;
+        text-align: right;
+        width: 124px;
+    }
+    #url {
+        width: 850px;
+    }
+    #row-optional div {
+        display: inline;
+    }
+    #col-reuse label {
+        width: auto;
+    }
+    #row-controls {
+        text-align: center;
+    }
+    #error {
+        color: red;
+    }
+    </style>
+    <script type="text/javascript">//<![CDATA[
+    $(function() {
+        $('#url').focus();
+        $('input[type=submit]').click(function(e) {
+            e.preventDefault();
+            var data = {
+                url: $('#url').val(),
+                name: $('#name').val(),
+                reuse: $('#reuse').attr('checked') ? '1': ''
+            }
+            $.ajax({
+                url: '.',
+                type: 'POST',
+                data: data,
+                error: function(xhr, textStatus, errorThrown) {
+                    $('#error').remove();
+                    $('#result').remove();
+                    $('<div id="error"></div>').appendTo($('form'));
+                    var msg = 'error';
+                    switch(xhr.responseText) {
+                        case 'invalid request':
+                            msg = 'invalid url';
+                            break;
+                        case 'name already used':
+                            msg = 'duplicate code';
+                            break;
+                    }
+                    $('#error').text('error: ' + msg);
+                },
+                success: function(data, textStatus, xhr) {
+                    $('#error').remove();
+                    $('#result').remove();
+                    $('<div id="result">The short url: <a href="#"></a></div>').appendTo($('form'));
+                    var url = 'http://dvlr.it/' + data;
+                    $('#result a').text(url).attr('href', url);
+                }
+            });
+        })
+    });
+    //]]></script>
 </head>
 <body>
-    <form action="." method="POST">
-        <div>
-            <label for="url">URL</label>
-            <input type="text" id="url" name="url" value="" />
+    <form action="." method="post">
+        <div id="row-url">
+            <label for="url">url</label>
+            <input type="text" id="url" name="url" value="http://" />
         </div>
-        <div>
-            <label for="name">name</label>
-            <input type="text" id="name" name="name" maxlength="6" value="" />
+        <div id="row-optional">
+            <div id="col-code">
+                <label for="name">code (optional)</label>
+                <input type="text" id="name" name="name" maxlength="6" value="" />
+            </div>
+            <div id="col-reuse">
+                <label for="reuse">if possible reuse an existing short url</label>
+                <input type="checkbox" id="reuse" name="reuse" value="1" checked="checked" />
+            </div>
         </div>
-        <div>
-            <label for="reuse">if possible reuse an existing short url</label>
-            <input type="checkbox" id="reuse" name="reuse" value="1" />
-        </div>
-        <div>
+        <div id="row-controls">
             <input type="submit" value="make short url" />
         </div>
     </form>
 </body>
+</html>

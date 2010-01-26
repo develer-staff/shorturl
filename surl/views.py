@@ -1,4 +1,7 @@
 # -*- coding: UTF-8 -*-
+import re
+import urllib2
+
 import models
 import settings
 
@@ -21,9 +24,13 @@ def jsonp_short_url(request):
         url = request.GET['q']
     except KeyError:
         return HttpResponseBadRequest(content='invalid request')
-    return HttpResponse(content='document.log("%s");' % make_short_url(url))
+    try:
+        title = request.GET['t']
+    except KeyError:
+        title = None
+    return HttpResponse(content='document.log("%s");' % make_short_url(url, title=title))
 
-def make_short_url(url, code=None, reuse=True):
+def make_short_url(url, code=None, reuse=True, title=None):
     short = None
     if reuse:
         try:
@@ -31,7 +38,8 @@ def make_short_url(url, code=None, reuse=True):
         except IndexError:
             pass
     if short is None:
-        title = ''
+        if title is None:
+            title = fetch_title(url)
         if code:
             short = models.ShortUrl.new_url(url, title, id=code)
         else:
@@ -42,3 +50,17 @@ def make_short_url(url, code=None, reuse=True):
         url = reverse('surl-redirect', kwargs={'url': short.id})
     return url
 
+_title = re.compile(r'<title>([^<]*)')
+
+def fetch_title(url):
+    try:
+        f = urllib2.urlopen(url)
+    except:
+        return ''
+    data = f.read(512)
+    f.close()
+    match = _title.search(data)
+    if not match:
+        return ''
+    else:
+        return match.group(1)

@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse
 
 try:
     GOOGLE_ANALYTICS = settings.SURL_GOOGLE_ANALYTICS

@@ -2,6 +2,6 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-     (r'^s/', include('surl.urls')),
-     (r'', 'shorturl.views.root'),
+     (r'^$', 'shorturl.views.root'),
+     (r'', include('surl.urls')),
 )

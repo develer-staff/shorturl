@@ -61,7 +61,7 @@
                 reuse: $('#reuse').attr('checked') ? '1': ''
             }
             $.ajax({
-                url: '.',
+                url: '{% url root %}',
                 type: 'POST',
                 data: data,
                 error: function(xhr, textStatus, errorThrown) {
@@ -91,7 +91,7 @@
     //]]></script>
 </head>
 <body>
-    <form action="." method="post">
+    <form action="{% url root %}" method="post">
         <div id="row-url">
             <label for="url">url</label>
             <input type="text" id="url" name="url" value="http://" />

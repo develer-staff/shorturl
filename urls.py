@@ -26,6 +26,6 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-     (r'^$', 'shorturl.views.root'),
+     url(r'^$', 'shorturl.views.root', name='root'),
      (r'', include('surl.urls')),
 )

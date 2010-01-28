@@ -48,7 +48,7 @@ MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '=7&sfv2krkm$*3+$)q&==pp9lq5fx9*zq=n#t2&*s*1*&4szw-'
+# SECRET_KEY = 
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -85,3 +85,9 @@ except ImportError:
 
 del additional_settings
 del os
+
+try:
+    SECRET_KEY
+except NameError:
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured('You don\'t have a SECRET_KEY')

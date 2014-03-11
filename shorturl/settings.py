@@ -10,15 +10,21 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+try:
+    import keys
+except ImportError:
+    import keys_sample as keys
+    print ("WARNING YOU'RE USING keys_sample.py. Define your keys.py file.")
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'SECRET_KEY'
+SECRET_KEY = keys.SECRET_KEY
 
-SURL_GOOGLE_ANALYTICS = 'ciao'
+SURL_GOOGLE_ANALYTICS = keys.SURL_GOOGLE_ANALYTICS
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

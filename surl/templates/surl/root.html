@@ -35,16 +35,16 @@
                         $('#error').remove();
                         $('#result').remove();
                         $('<div class="col-md-4 col-xs-9 col-centered"><div id="error"></div></div>').appendTo($('form'));
-                        var msg = 'error';
+                        var msg = 'generic error.';
                         switch(xhr.responseText) {
                             case 'invalid request':
-                                msg = 'Invalid url';
+                                msg = 'invalid url.';
                                 break;
                             case 'name already used':
-                                msg = 'Duplicate code';
+                                msg = 'duplicate code.';
                                 break;
                         }
-                        $('#error').text('error: ' + msg);
+                        $('#error').text('Error: ' + msg);
                     },
                     success: function(data, textStatus, xhr) {
                         $('#error').remove();
@@ -64,11 +64,11 @@
         <form action="{% url 'root' %}" method="post" role="form">
             {% csrf_token %}
             <div id="row-url" class="form-group">
-                <input type="text" id="url" name="url" value="http://" placeholder="Your long url"/>
+                <input class="col-md-4 col-xs-9 col-centered" type="text" id="url" name="url" value="http://" placeholder="Your long url"/>
             </div>
             <div id="row-optional">
                 <div id="col-code" class="form-group">
-                    <input type="text" id="name" name="name" maxlength="4" value="" placeholder="Code (optional)"/>
+                    <input class="col-md-2 col-xs-5 col-centered" type="text" id="name" name="name" maxlength="4" value="" placeholder="Code (optional)"/>
                 </div>
                 <div id="col-reuse" class="form-group">
                     <input type="checkbox" id="reuse" name="reuse" value="1" checked="checked" />

@@ -15,7 +15,15 @@
     border-radius:5px;
 }
 
-.col-centered{
+#row-url {
+    margin: 10px;
+}
+
+#col-code {
+    margin: 10px;
+}
+
+.col-centered {
     float: none;
     margin: 0 auto;
 }

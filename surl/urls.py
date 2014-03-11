@@ -26,7 +26,7 @@
 from django.conf.urls import patterns, url
 
 urlpatterns = patterns('',
+    url(r'^$', 'surl.views.root', name='root'),
     url(r'^short_url$', 'surl.views.jsonp_short_url', name='surl-jsonp-short-url'),
     url(r'^(?P<url>.*)$', 'surl.views.redirect', name = 'surl-redirect'),
 )
-

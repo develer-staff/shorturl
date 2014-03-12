@@ -14,7 +14,7 @@
 
     {% bootstrap_messages %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'surl/css/main.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
 
     <script type="text/javascript">
         $(function() {
@@ -60,7 +60,7 @@
 </head>
 <body>
     <div class="col-md-12 col-xs-12" style="text-align: center;display: table-cell;vertical-align: middle;">
-        <img src="{% static 'surl/images/logo.png' %}" style="margin:10px"/>
+        <img src="{% static 'images/logo.png' %}" style="margin:10px"/>
         <form action="{% url 'root' %}" method="post" role="form">
             {% csrf_token %}
             <div id="row-url">

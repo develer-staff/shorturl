@@ -64,7 +64,7 @@ def root(request):
         ctx = {
             'jsonp': ABSOLUTE_PREFIX_JSONP_SERVICE,
         }
-        return render_to_response('surl/root.html', ctx, context_instance=RequestContext(request))
+        return render_to_response('root.html', ctx, context_instance=RequestContext(request))
 
 def redirect(request, url):
     su = get_object_or_404(models.ShortUrl, pk=url)
@@ -73,7 +73,7 @@ def redirect(request, url):
         'url': su.url,
         #'ga': settings.GOOGLE_ANALYTICS,
     }
-    return render_to_response('surl/redirect.html', ctx, context_instance = RequestContext(request))
+    return render_to_response('redirect.html', ctx, context_instance = RequestContext(request))
 
 def jsonp_short_url(request):
     try:

@@ -34,14 +34,46 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
+from django import forms
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+
+from settings import ABSOLUTE_PREFIX_JSONP_SERVICE
+
+from django.db import IntegrityError
+
+class UrlForm(forms.Form):
+    url = forms.URLField()
+    name = forms.CharField(max_length=4, required=False)
+    reuse = forms.BooleanField(required=False)
+
+def root(request):
+    if request.method == 'POST':
+        f = UrlForm(request.POST)
+        if f.is_valid():
+            data = f.cleaned_data
+            try:
+                url = make_short_url(data['url'], code=data['name'], reuse=data['reuse'])
+            except IntegrityError, e:
+                return HttpResponseBadRequest(content='name already used')
+            return HttpResponse(content = url)
+        else:
+            return HttpResponseBadRequest(content='invalid request')
+    else:
+        ctx = {
+            'jsonp': ABSOLUTE_PREFIX_JSONP_SERVICE,
+        }
+        return render_to_response('root.html', ctx, context_instance=RequestContext(request))
+
 def redirect(request, url):
     su = get_object_or_404(models.ShortUrl, pk=url)
     ctx = {
         'title': su.title,
         'url': su.url,
-        'ga': settings.GOOGLE_ANALYTICS,
+        #'ga': settings.GOOGLE_ANALYTICS,
     }
-    return render_to_response('surl/redirect.html', ctx, context_instance = RequestContext(request))
+    return render_to_response('redirect.html', ctx, context_instance = RequestContext(request))
 
 def jsonp_short_url(request):
     try:

@@ -1,0 +1,102 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% load bootstrap3 %}
+
+    {% bootstrap_css %}
+
+    <script type="text/javascript" src="{% bootstrap_jquery_url %}">
+
+    {% bootstrap_javascript %}
+
+    {% bootstrap_messages %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
+
+    <script type="text/javascript">
+        $(function() {
+            $('#url').focus();
+            $('input[type=submit]').click(function(e) {
+                e.preventDefault();
+                var data = {
+                    url: $('#url').val(),
+                    name: $('#name').val(),
+                    reuse: $('#reuse').attr('checked') ? '1': '',
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+                $.ajax({
+                    url: '{% url "root" %}',
+                    type: 'POST',
+                    data: data,
+                    error: function(xhr, textStatus, errorThrown) {
+                        $('#error').remove();
+                        $('#result').remove();
+                        $('<div class="col-md-4 col-xs-9 col-centered"><div id="error"></div></div>').appendTo($('form'));
+                        var msg = 'generic error.';
+                        switch(xhr.responseText) {
+                            case 'invalid request':
+                                msg = 'invalid url.';
+                                break;
+                            case 'name already used':
+                                msg = 'duplicate code.';
+                                break;
+                        }
+                        $('#error').text('Error: ' + msg);
+                    },
+                    success: function(data, textStatus, xhr) {
+                        $('#error').remove();
+                        $('#result').remove();
+                        $('<div class="col-md-4 col-xs-9 col-centered"><a id="result" href="#"><div id="result"></div></a></div>').appendTo($('form'));
+                        $('#result div').text(data);
+                        $('#result').attr('href', data);
+                    }
+                });
+            })
+        });
+    </script>
+</head>
+<body>
+    <div class="col-md-12 col-xs-12" style="text-align: center;display: table-cell;vertical-align: middle;">
+        <img src="{% static 'images/logo.png' %}" style="margin:10px"/>
+        <form action="{% url 'root' %}" method="post" role="form">
+            {% csrf_token %}
+            <div id="row-url">
+                <div class="col-centered form-group col-md-8 col-xs-12">    
+                    <input class="form-control input-normal" type="text" id="url" name="url" value="http://" placeholder="Your long url"/>
+                </div>
+            </div>
+            <div id="row-optional">
+                <div id="col-code">
+                    <div class="col-centered form-group col-md-2 col-xs-6">    
+                        <input class="form-control input-normal" type="text" id="name" name="name" maxlength="4" value="" placeholder="Code (optional)"/>
+                    </div>
+                </div>
+                <div id="col-reuse" class="form-group">
+                    <input type="checkbox" id="reuse" name="reuse" value="1" checked="checked" />
+                    <label for="reuse">If possible reuse an existing short url</label>
+                </div>
+            </div>
+            <div id="row-controls">
+                <input type="submit" class="btn btn-success" value="Shorten" />
+            </div>
+        </form>
+    </div>
+</body>
+{% if jsonp %}
+{% comment %}
+(function() {
+document.log=function(data){ prompt('The short version', data); };
+var e=document.createElement("script");
+e.src="{{jsonp}}?q=" + encodeURIComponent(document.location.href) + "&t=" + encodeURIComponent(document.title);
+e.type="text/javascript";
+document.getElementsByTagName("head")[0].appendChild(e);
+})();
+{% endcomment %}
+<div>
+    The bookmarklet: 
+    <a href="javascript:(function()%20{document.log=function(data){%20prompt(%27The%20short%20version%27,%20data);%20};var%20e=document.createElement(%22script%22);e.src=%22{{jsonp}}?q=%22%20+%20encodeURIComponent(document.location.href)%20+%20%22&t=%22%20+%20encodeURIComponent(document.title);e.type=%22text/javascript%22;document.getElementsByTagName(%22head%22)[0].appendChild(e);})();" title="dvlr.it!">dvlr.it!</a>
+</div>
+{% endif %}

@@ -1,0 +1,29 @@
+#result {
+    margin: 10px;
+    color: green;
+}
+
+#result div {
+    border:2px solid;
+    border-radius:5px;
+}
+
+#error {
+    margin: 10px;
+    color: red;
+    border:2px solid;
+    border-radius:5px;
+}
+
+#row-url {
+    margin: 10px;
+}
+
+#col-code {
+    margin: 10px;
+}
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}

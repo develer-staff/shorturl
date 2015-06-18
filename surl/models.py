@@ -24,6 +24,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 from django.db import models
+from django.db.utils import IntegrityError
 
 from datetime import datetime
 from random import choice
@@ -50,8 +51,8 @@ class ShortUrl(models.Model):
                 i.id = r()
                 try:
                     i.save(force_insert=True)
-                except Exception, e:
-                    print e
+                except IntegrityError, e:
+                    pass
                 else:
                     break
         else:

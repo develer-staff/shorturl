@@ -32,7 +32,7 @@ from random import choice
 character_set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
 
 class ShortUrl(models.Model):
-    id = models.CharField(max_length=4, primary_key=True)
+    id = models.CharField(max_length=16, primary_key=True)
     url = models.URLField(verify_exists=False, db_index=True)
     title = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)

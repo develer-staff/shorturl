@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 # Copyright (c) 2010 David Mugnai <dvd@develer.com>
-# Copyright (c) 2010 Develer s.r.l. 
-# 
+# Copyright (c) 2010 Develer s.r.l.
+#
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
 # files (the "Software"), to deal in the Software without
@@ -10,10 +10,10 @@
 # copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following
 # conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -35,7 +35,7 @@ from surl.views import make_short_url
 from django.db import IntegrityError
 
 class UrlForm(forms.Form):
-    url = forms.URLField(verify_exists=False)
+    url = forms.URLField()
     name = forms.CharField(max_length=16, required=False)
     reuse = forms.BooleanField(required=False)
 

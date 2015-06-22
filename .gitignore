@@ -3,3 +3,6 @@ Thumbs.db
 settings_locale.py
 db/*
 .DS_Store
+venv
+*.sqlite3
+keys.py

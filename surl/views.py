@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 # Copyright (c) 2010 David Mugnai <dvd@develer.com>
-# Copyright (c) 2010 Develer s.r.l. 
-# 
+# Copyright (c) 2010 Develer s.r.l.
+#
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
 # files (the "Software"), to deal in the Software without
@@ -10,10 +10,10 @@
 # copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following
 # conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,14 +34,46 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
+from django import forms
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+
+from settings import ABSOLUTE_PREFIX_JSONP_SERVICE
+
+from django.db import IntegrityError
+
+class UrlForm(forms.Form):
+    url = forms.URLField()
+    name = forms.CharField(max_length=16, required=False)
+    reuse = forms.BooleanField(required=False)
+
+def root(request):
+    if request.method == 'POST':
+        f = UrlForm(request.POST)
+        if f.is_valid():
+            data = f.cleaned_data
+            try:
+                url = make_short_url(data['url'], code=data['name'], reuse=data['reuse'])
+            except IntegrityError, e:
+                return HttpResponseBadRequest(content='name already used')
+            return HttpResponse(content = url)
+        else:
+            return HttpResponseBadRequest(content='invalid request')
+    else:
+        ctx = {
+            'jsonp': ABSOLUTE_PREFIX_JSONP_SERVICE,
+        }
+        return render_to_response('root.html', ctx, context_instance=RequestContext(request))
+
 def redirect(request, url):
     su = get_object_or_404(models.ShortUrl, pk=url)
     ctx = {
         'title': su.title,
         'url': su.url,
-        'ga': settings.GOOGLE_ANALYTICS,
+        #'ga': settings.GOOGLE_ANALYTICS,
     }
-    return render_to_response('surl/redirect.html', ctx, context_instance = RequestContext(request))
+    return render_to_response('redirect.html', ctx, context_instance = RequestContext(request))
 
 def jsonp_short_url(request):
     try:

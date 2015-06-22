@@ -31,7 +31,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dvlr.it', 'dvlr.develer.com']
 
 
 # Application definition
